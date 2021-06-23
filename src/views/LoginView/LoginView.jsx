@@ -4,23 +4,21 @@ import { useDispatch } from "react-redux";
 import Container from "../../components/Container/Container";
 
 export default function LoginView() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [login, setLogin]=useState({email:'', password:'' })
   const dispatch = useDispatch();
 
-  const handleEmailChange = ({ target: { value } }) => {
-    setEmail(value);
-  };
-  const handlePasswordChange = ({ target: { value } }) => {
-    setPassword(value);
-  };
-
+ 
+ const handleChange = (e) => {
+  const { name, value } = e.currentTarget;
+  setLogin((prev) => ({...prev, [name]:value}));
+};
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(authOperations.login({ email, password }));
-    setEmail("");
-    setPassword("");
+    dispatch(authOperations.login( login ));
+    reset();
+   
   };
+  const reset = () => setLogin({email:'', password:'' });
 
   return (
     <Container>
@@ -32,8 +30,8 @@ export default function LoginView() {
             className="regInput"
             name="email"
             type="email"
-            value={email}
-            onChange={handleEmailChange}
+            value={login.email}
+            onChange={handleChange}
           />
         </label>
         <label className="regFormLabel">
@@ -42,8 +40,8 @@ export default function LoginView() {
             className="regInput"
             name="password"
             type="password"
-            value={password}
-            onChange={handlePasswordChange}
+            value={login.password}
+            onChange={handleChange}
           />
         </label>
         <button className="regBtn">Login</button>

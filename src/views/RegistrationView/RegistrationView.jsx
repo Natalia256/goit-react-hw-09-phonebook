@@ -5,27 +5,25 @@ import Container from "../../components/Container/Container";
 import authOperations from "../../redux/auth/authOperations";
 
 export default function RegistrationView() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  
+ const [registration, setRegistration]=useState({name:'',     email:'', password:'' })
+
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const {name, value, } = e.target;
+    setRegistration(prev => ({...prev, [name]: value}))
+  }
+
+  const handleSubmit = (e )=> {
     e.preventDefault();
-    dispatch(authOperations.register({ name, email, password }));
-    setName("");
-    setEmail("");
-    setPassword("");
+
+    dispatch(authOperations.register(registration));
+    reset();
   };
-  const handleNameChange = ({ target: { value } }) => {
-    setName(value);
-  };
-  const handleEmailChange = ({ target: { value } }) => {
-    setEmail(value);
-  };
-  const handlePasswordChange = ({ target: { value } }) => {
-    setPassword(value);
-  };
+
+  const reset = () => setRegistration({ name: '', email: '', password: '' });
+ 
 
   return (
     <Container>
@@ -37,8 +35,8 @@ export default function RegistrationView() {
             className="regInput"
             name="name"
             type="text"
-            value={name}
-            onChange={handleNameChange}
+            value={registration.name}
+            onChange={handleChange}
           />
         </label>
         <label className="regFormLabel">
@@ -47,8 +45,8 @@ export default function RegistrationView() {
             className="regInput"
             name="email"
             type="email"
-            value={email}
-            onChange={handleEmailChange}
+            value={registration.email}
+            onChange={handleChange}
           />
         </label>
         <label className="regFormLabel">
@@ -57,8 +55,8 @@ export default function RegistrationView() {
             className="regInput"
             name="password"
             type="password"
-            value={password}
-            onChange={handlePasswordChange}
+            value={registration.password}
+            onChange={handleChange}
           />
         </label>
         <button className="regBtn">Sign up</button>

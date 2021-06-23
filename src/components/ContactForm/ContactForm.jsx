@@ -6,37 +6,30 @@ import operations from "../../redux/phonebook/operations";
 import selectors from "../../redux/phonebook/selectors";
 
 export default function ContactForm() {
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+
+  const [contact, setContact]=useState({name:'',     number:''})
   const contacts = useSelector(selectors.getContactsList);
   const dispatch = useDispatch();
 
-
-
-  const handleNameChange = (e) => {
-    const { value } = e.currentTarget;
-    setName(value);
-  };
-  const handleNumberChange = (e) => {
-    const { value } = e.currentTarget;
-    setNumber(value);
-  };
-
+ const handleChange = (e) => {
+  
+    const { name, value } = e.currentTarget;
+    setContact((prev) => ({...prev, [name]:value}));
+ };
+ 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (contacts.find((el) => el.name === name)) {
-      alert("already add");
+   e.preventDefault();
+ 
+ if (contacts.find((el) => el.contact === contact)) {
+   alert("already add");
       reset();
       return;
     }
-    dispatch(operations.addContact({ name, number }));
+    dispatch(operations.addContact(contact ));
     reset();
   };
 
-  const reset = () => {
-    setName("");
-    setNumber("");
-  };
+  const reset = () => setContact({ name: '', number: '' });
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -44,8 +37,8 @@ export default function ContactForm() {
         Name
         <input
           className={styles.input}
-          value={name}
-          onChange={handleNameChange}
+          value={contact.name}
+          onChange={handleChange}
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -57,8 +50,8 @@ export default function ContactForm() {
         Number
         <input
           className={styles.input}
-          value={number}
-          onChange={handleNumberChange}
+          value={contact.number}
+          onChange={handleChange}
           type="tel"
           name="number"
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
